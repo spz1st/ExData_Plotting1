@@ -8,8 +8,7 @@
 
 # encapsulate the activities in a function
 plot1 = function(){
-  # file = "household_power_consumption.txt" # data file
-  file = "test.txt"
+  file = "household_power_consumption.txt" # data file
 
   con = file(file)
   open(con)
@@ -32,6 +31,12 @@ plot1 = function(){
     if(length(ok)){
       num = num + 1
       lines[num] = line  # much faster to collect lines first
+    }
+    else if(num > 0){
+      # if num is not 0 any more, that means the two days data have been read
+      # because the data are ordered by time,
+      # we can quit once 2007-02-01 and 2007-02-02 have passed
+      break
     }
   }
   close(con)
@@ -61,3 +66,4 @@ plot1 = function(){
 }
 
 plot1()
+

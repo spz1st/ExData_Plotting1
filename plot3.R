@@ -8,8 +8,7 @@
 
 # encapsulate the activities in a function
 plot3 = function() {
-  # file = "household_power_consumption.txt" # data file
-  file = "test.txt"
+  file = "household_power_consumption.txt" # data file
 
   con = file(file)
   open(con)
@@ -33,6 +32,12 @@ plot3 = function() {
       num = num + 1
       lines[num] = line  # much faster to collect lines first
     }
+    else if(num > 0){
+      # if num is not 0 any more, that means the two days data have been read
+      # because the data are ordered by time,
+      # we can quit once 2007-02-01 and 2007-02-02 have passed
+      break
+    }
   }
   close(con)
 
@@ -54,6 +59,7 @@ plot3 = function() {
   plot(data$Sub_metering_1, type="l", xlab="", ylab="Energy sub metering", xaxt="n")
   lines(data$Sub_metering_2, col="red")
   lines(data$Sub_metering_3, col="blue")
+  # Feb. 01, 2007 is Thursday
   axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
   legend(x="topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col=c("black", "red","blue"), lty=c(1,1,1))
   dev.off()

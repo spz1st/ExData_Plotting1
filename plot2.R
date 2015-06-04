@@ -8,8 +8,7 @@
 
 # encapsulate the activities in a function
 plot2 = function(){
-  # file = "household_power_consumption.txt" # data file
-  file = "test.txt"
+  file = "household_power_consumption.txt" # data file
 
   con = file(file)
   open(con)
@@ -33,6 +32,12 @@ plot2 = function(){
       num = num + 1
       lines[num] = line  # much faster to collect lines first
     }
+    else if(num > 0){
+      # if num is not 0 any more, that means the two days data have been read
+      # because the data are ordered by time,
+      # we can quit once 2007-02-01 and 2007-02-02 have passed
+      break
+    }
   }
   close(con)
 
@@ -52,6 +57,7 @@ plot2 = function(){
 
   png("plot2.png") # default size is 480 x 480
   plot(data$Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)", xaxt="n")
+  # Feb. 01, 2007 is Thursday
   axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
   dev.off()
 

@@ -8,8 +8,7 @@
 
 # encapsulate the activities in a function
 plot4 = function() {
-  # file = "household_power_consumption.txt" # data file
-  file = "test.txt"
+  file = "household_power_consumption.txt" # data file
 
   con = file(file)
   open(con)
@@ -33,6 +32,12 @@ plot4 = function() {
       num = num + 1
       lines[num] = line  # much faster to collect lines first
     }
+    else if(num > 0){
+      # if num is not 0 any more, that means the two days data have been read
+      # because the data are ordered by time,
+      # we can quit once 2007-02-01 and 2007-02-02 have passed
+      break
+    }
   }
   close(con)
 
@@ -53,20 +58,23 @@ plot4 = function() {
   png("plot4.png") # default size is 480 x 480
 
   par(mfrow=c(2,2))  # plot 4 graphes; only affect the current device
-  plot(data$Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)", xaxt="n")
-  axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
+  with(data, {
+    plot(Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)", xaxt="n")
+    # Feb. 01, 2007 is Thursday
+    axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
 
-  plot(data$Voltage, type="l", xlab="datetime", ylab="Voltage", xaxt="n")
-  axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
+    plot(Voltage, type="l", xlab="datetime", ylab="Voltage", xaxt="n")
+    axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
 
-  plot(data$Sub_metering_1, type="l", xlab="", ylab="Energy sub metering", xaxt="n")
-  lines(data$Sub_metering_2, col="red")
-  lines(data$Sub_metering_3, col="blue")
-  axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
-  legend(x="topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col=c("black", "red","blue"), lty=c(1,1,1), bty="n")
+    plot(Sub_metering_1, type="l", xlab="", ylab="Energy sub metering", xaxt="n")
+    lines(Sub_metering_2, col="red")
+    lines(Sub_metering_3, col="blue")
+    axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
+    legend(x="topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col=c("black", "red","blue"), lty=c(1,1,1), bty="n")
 
-  plot(data$Global_reactive_power, type="l", xlab="datetime", ylab="Global_reactive_power", xaxt="n")
-  axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
+    plot(Global_reactive_power, type="l", xlab="datetime", ylab="Global_reactive_power", xaxt="n")
+    axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
+  })
 
   dev.off()
 
