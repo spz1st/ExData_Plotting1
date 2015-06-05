@@ -61,19 +61,22 @@ plot4 = function() {
   with(data, {
     plot(Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)", xaxt="n")
     # Feb. 01, 2007 is Thursday
-    axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
+    d1 = as.Date("2007-02-01")
+    dates = c(d1, d1+1, d1+2)
+    wkds = sapply(dates, format, "%a")
+    axis(1, at=c(1, num/2, num), labels=wkds)
 
     plot(Voltage, type="l", xlab="datetime", ylab="Voltage", xaxt="n")
-    axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
+    axis(1, at=c(1, num/2, num), labels=wkds)
 
     plot(Sub_metering_1, type="l", xlab="", ylab="Energy sub metering", xaxt="n")
     lines(Sub_metering_2, col="red")
     lines(Sub_metering_3, col="blue")
-    axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
+    axis(1, at=c(1, num/2, num), labels=wkds)
     legend(x="topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col=c("black", "red","blue"), lty=c(1,1,1), bty="n")
 
     plot(Global_reactive_power, type="l", xlab="datetime", ylab="Global_reactive_power", xaxt="n")
-    axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
+    axis(1, at=c(1, num/2, num), labels=wkds)
   })
 
   dev.off()

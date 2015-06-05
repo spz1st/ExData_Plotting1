@@ -58,7 +58,10 @@ plot2 = function(){
   png("plot2.png") # default size is 480 x 480
   plot(data$Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)", xaxt="n")
   # Feb. 01, 2007 is Thursday
-  axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
+  d1 = as.Date("2007-02-01")
+  dates = c(d1, d1+1, d1+2)
+  wkds = sapply(dates, format, "%a")
+  axis(1, at=c(1, num/2, num), labels=wkds)
   dev.off()
 
   # data   # if want to return the data

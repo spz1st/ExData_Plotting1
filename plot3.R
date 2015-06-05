@@ -60,7 +60,10 @@ plot3 = function() {
   lines(data$Sub_metering_2, col="red")
   lines(data$Sub_metering_3, col="blue")
   # Feb. 01, 2007 is Thursday
-  axis(1, at=c(1, num/2, num), labels=c("Thur", "Fri", "Sat"))
+  d1 = as.Date("2007-02-01")
+  dates = c(d1, d1+1, d1+2)
+  wkds = sapply(dates, format, "%a")
+  axis(1, at=c(1, num/2, num), labels=wkds)
   legend(x="topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col=c("black", "red","blue"), lty=c(1,1,1))
   dev.off()
 
