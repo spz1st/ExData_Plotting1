@@ -42,46 +42,38 @@ plot4 = function() {
   close(con)
 
   # initiate the data frame with proper number of rows and columns
-  data = data.frame("", "", 1:num, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, stringsAsFactors=F)
+  df = data.frame("", "", 1:num, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, stringsAsFactors=F)
   for(i in 1:length(lines)){ # build the data frame
     vals = unlist(strsplit(lines[i], ";"))
-    data[i,1:2] = vals[1:2]
-    data[i,3:9] = as.numeric(vals[3:9])
+    df[i,1:2] = vals[1:2]
+    df[i,3:9] = as.numeric(vals[3:9])
   }
 
-  names(data) = unlist(strsplit(header, ";")) # use original column names
+  names(df) = unlist(strsplit(header, ";")) # use original column names
 
-  # data already ordered by data/time in the input file
+  df$Date <- strptime(paste(df$Date,df$Time, sep=" "), format="%d/%m/%Y %H:%M:%S")
+  # the data already ordered by data/time in the input file
   # otherwise sort the data by data/time ascending
-  # data = data[order(data[1],data[2]),]
+  # df = df[order(df[1],df[2]),]
 
   png("plot4.png") # default size is 480 x 480
 
   par(mfrow=c(2,2))  # plot 4 graphes; only affect the current device
-  with(data, {
-    plot(Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)", xaxt="n")
-    # Feb. 01, 2007 is Thursday
-    d1 = as.Date("2007-02-01")
-    dates = c(d1, d1+1, d1+2)
-    wkds = sapply(dates, format, "%a")
-    axis(1, at=c(1, num/2, num), labels=wkds)
+  with(df, {
+    plot(Date, Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)")
+    plot(Date, Voltage, type="l", xlab="datetime", ylab="Voltage")
 
-    plot(Voltage, type="l", xlab="datetime", ylab="Voltage", xaxt="n")
-    axis(1, at=c(1, num/2, num), labels=wkds)
-
-    plot(Sub_metering_1, type="l", xlab="", ylab="Energy sub metering", xaxt="n")
-    lines(Sub_metering_2, col="red")
-    lines(Sub_metering_3, col="blue")
-    axis(1, at=c(1, num/2, num), labels=wkds)
+    plot(Date, Sub_metering_1, type="l", xlab="", ylab="Energy sub metering")
+    lines(Date, Sub_metering_2, col="red")
+    lines(Date, Sub_metering_3, col="blue")
     legend(x="topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col=c("black", "red","blue"), lty=c(1,1,1), bty="n")
 
-    plot(Global_reactive_power, type="l", xlab="datetime", ylab="Global_reactive_power", xaxt="n")
-    axis(1, at=c(1, num/2, num), labels=wkds)
+    plot(Date, Global_reactive_power, type="l", xlab="datetime", ylab="Global_reactive_power")
   })
 
   dev.off()
 
-  # data   # if want to return the data
+  # df   # if want to return the data
 }
 
 plot4()

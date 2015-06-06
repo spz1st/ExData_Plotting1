@@ -42,28 +42,26 @@ plot3 = function() {
   close(con)
 
   # initiate the data frame with proper number of rows and columns
-  data = data.frame("", "", 1:num, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, stringsAsFactors=F)
+  df = data.frame("", "", 1:num, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, stringsAsFactors=F)
   for(i in 1:length(lines)){ # build the data frame
     vals = unlist(strsplit(lines[i], ";"))
-    data[i,1:2] = vals[1:2]
-    data[i,3:9] = as.numeric(vals[3:9])
+    df[i,1:2] = vals[1:2]
+    df[i,3:9] = as.numeric(vals[3:9])
   }
 
-  names(data) = unlist(strsplit(header, ";")) # use original column names
+  names(df) = unlist(strsplit(header, ";")) # use original column names
 
-  # data already ordered by data/time in the input file
+  df$Date <- strptime(paste(df$Date,df$Time, sep=" "), format="%d/%m/%Y %H:%M:%S")
+
+  # the data already ordered by data/time in the input file
   # otherwise sort the data by data/time ascending
-  # data = data[order(data[1],data[2]),]
+  # df = df[order(df[1],df[2]),]
 
   png("plot3.png") # default size is 480 x 480
-  plot(data$Sub_metering_1, type="l", xlab="", ylab="Energy sub metering", xaxt="n")
-  lines(data$Sub_metering_2, col="red")
-  lines(data$Sub_metering_3, col="blue")
+  plot(df$Date, df$Sub_metering_1, type="l", xlab="", ylab="Energy sub metering")
+  lines(df$Date, df$Sub_metering_2, col="red")
+  lines(df$Date, df$Sub_metering_3, col="blue")
   # Feb. 01, 2007 is Thursday
-  d1 = as.Date("2007-02-01")
-  dates = c(d1, d1+1, d1+2)
-  wkds = sapply(dates, format, "%a")
-  axis(1, at=c(1, num/2, num), labels=wkds)
   legend(x="topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col=c("black", "red","blue"), lty=c(1,1,1))
   dev.off()
 

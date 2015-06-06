@@ -42,29 +42,25 @@ plot2 = function(){
   close(con)
 
   # initiate the data frame with proper number of rows and columns
-  data = data.frame("", "", 1:num, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, stringsAsFactors=F)
+  df = data.frame("", "", 1:num, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, stringsAsFactors=F)
   for(i in 1:length(lines)){ # build the data frame
     vals = unlist(strsplit(lines[i], ";"))
-    data[i,1:2] = vals[1:2]
-    data[i,3:9] = as.numeric(vals[3:9])
+    df[i,1:2] = vals[1:2]
+    df[i,3:9] = as.numeric(vals[3:9])
   }
 
-  names(data) = unlist(strsplit(header, ";")) # use original column names
+  names(df) = unlist(strsplit(header, ";")) # use original column names
 
   # data already ordered by data/time in the input file
   # otherwise sort the data by data/time ascending
-  # data = data[order(data[1],data[2]),]
+  # df$date <- as.POSIXct(paste(df$Date,df$Time, sep=" "), format="%d/%m/%Y %H:%M:%S", tz="EST")
+  df$Date <- strptime(paste(df$Date,df$Time, sep=" "), format="%d/%m/%Y %H:%M:%S")
 
   png("plot2.png") # default size is 480 x 480
-  plot(data$Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)", xaxt="n")
-  # Feb. 01, 2007 is Thursday
-  d1 = as.Date("2007-02-01")
-  dates = c(d1, d1+1, d1+2)
-  wkds = sapply(dates, format, "%a")
-  axis(1, at=c(1, num/2, num), labels=wkds)
+  plot(df$Date, df$Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)")
   dev.off()
 
-  # data   # if want to return the data
+  # df   # if want to return the data
 }
 
 plot2()
