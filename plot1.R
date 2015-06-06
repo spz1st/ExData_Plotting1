@@ -41,28 +41,28 @@ plot1 = function(){
   }
   close(con)
 
-  # initiate the data frame with proper number of rows and columns
-  data = data.frame("", "", 1:num, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, stringsAsFactors=F)
+  # initiate the data frame with needed columns
+  df = data.frame("", "", 1:num, stringsAsFactors=F)
   for(i in 1:length(lines)){ # build the data frame
     vals = unlist(strsplit(lines[i], ";"))
-    data[i,1:2] = vals[1:2]
-    data[i,3:9] = as.numeric(vals[3:9])
+    df[i,1:2] = vals[1:2]
+    df[i,3] = as.numeric(vals[3])
   }
 
-  names(data) = unlist(strsplit(header, ";")) # use original column names
+  names(df) = unlist(strsplit(header, ";"))[1:3] # use original column names
 
-  # data already ordered by data/time in the input file
+  # the data already ordered by data/time in the input file
   # otherwise sort the data by data/time ascending
-  # data = data[order(data[1],data[2]),]
+  # df = df[order(df[1],df[2]),]
 
   png("plot1.png") # default size is 480 x 480
-  hist(data$Global_active_power, col="red", main="Global Active Power", xlab="Global Active Power (kilowatts)")
-  # rug(data$Global_active_power) # for actual data points
-  # abline(v = mean(data$Global_active_power), lwd = 3, col="red")
-  # abline(v = median(data$Global_active_power), lwd = 3, col="blue")
+  hist(df$Global_active_power, col="red", main="Global Active Power", xlab="Global Active Power (kilowatts)")
+  # rug(df$Global_active_power) # for actual data points
+  # abline(v = mean(df$Global_active_power), lwd = 3, col="red")
+  # abline(v = median(df$Global_active_power), lwd = 3, col="blue")
   dev.off()
 
-  # data   # if want to return the data
+  # df   # if want to return the data
 }
 
 plot1()

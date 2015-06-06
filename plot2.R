@@ -41,15 +41,15 @@ plot2 = function(){
   }
   close(con)
 
-  # initiate the data frame with proper number of rows and columns
-  df = data.frame("", "", 1:num, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, stringsAsFactors=F)
+  # initiate the data frame with needed columns
+  df = data.frame("", "", 1:num, stringsAsFactors=F)
   for(i in 1:length(lines)){ # build the data frame
     vals = unlist(strsplit(lines[i], ";"))
     df[i,1:2] = vals[1:2]
-    df[i,3:9] = as.numeric(vals[3:9])
+    df[i,3] = as.numeric(vals[3])
   }
 
-  names(df) = unlist(strsplit(header, ";")) # use original column names
+  names(df) = unlist(strsplit(header, ";"))[1:3] # use original column names
 
   # data already ordered by data/time in the input file
   # otherwise sort the data by data/time ascending
